@@ -58,6 +58,45 @@ public static void main (String[] args) throws InterruptedException, IOException
 Explanation: This server listens on port 50051 and starts the service HelloWorldServiceImpl. It prints a message indicating that the service is running. The start() method initializes and starts the server, and blockUntilShutdown() keeps it running until it's manually terminated.
 
 
+### 3. Generating Python gRPC Code
+
+```python
+pip install grpcio-tools
+python -m grpc_tools.protoc -I. --python_out=../python --grpc_python_out=../python hello.proto
+```
+
+Explanation: These commands install the necessary Python gRPC tools and use the protoc compiler to generate Python gRPC code from a .proto file. This process produces the hello_pb2.py and hello_pb2_grpc.py files, which contain the Python classes for gRPC communication.
+
+
+### 4. HelloWorldClient (Python)
+
+```python
+import grpc
+import hello_pb2
+import hello_pb2_grpc
+
+def run():
+    # gRPC channel
+    channel = grpc.insecure_channel('localhost:50051')
+
+    # Stub (Client)
+    stub = hello_pb2_grpc.HelloWorldServiceStub(channel)
+
+    # HelloRequest message
+    request = hello_pb2.HelloRequest(firstname="Marko", lastname="Djordjevic 2.0")
+
+    # Call hello method on the server
+    response = stub.hello(request)
+
+    print("Client received: " + response.text)
+
+if __name__ == '__main__':
+    run()
+
+```
+
+Explanation: This Python script demonstrates how to create a client that communicates with the HelloWorld service via gRPC. It creates an insecure channel to the localhost server on port 50051, initializes a client stub, constructs a HelloRequest message, sends it to the server, and prints the response.
+
 ---
 
 ## Questions
